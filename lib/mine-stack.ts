@@ -55,6 +55,8 @@ export class MineStack extends cdk.Stack {
             server_sg.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.allTcp(), "Allow TCP from any IPv4")
             server_sg.addIngressRule(ec2.Peer.anyIpv6(), ec2.Port.allTcp(), "Allow TCP from any IPv6")
             server_sg.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), "Allow SSH from any IPv4")
+            server_sg.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.allUdp(), "Allow UDP traffic from any IPv4")
+            server_sg.addIngressRule(ec2.Peer.anyIpv6(), ec2.Port.allUdp(), "Allow UDP traffic from any IPv6")
             const server_instance = new ec2.Instance(this, "ServerInstance", {
                 instanceType: ec2.InstanceType.of(
                     ec2.InstanceClass.T2,
