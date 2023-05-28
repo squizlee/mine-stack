@@ -6,7 +6,7 @@ import { Construct } from "constructs"
 import * as ec2 from "aws-cdk-lib/aws-ec2"
 import { EC2Client, DescribeKeyPairsCommand } from "@aws-sdk/client-ec2"
 
-const ec2_client = new EC2Client({region: process.env.CDK_DEFAULT_REGION})
+const ec2_client = new EC2Client({ region: process.env.CDK_DEFAULT_REGION })
 
 /**
  * read user data script line by line
@@ -51,7 +51,7 @@ export class MineStack extends cdk.Stack {
             })
             user_data.addCommands(...read_user_data_script("bedrock.sh"))
 
-            const server_sg = new ec2.SecurityGroup(this, "ServerInstanceSG", {vpc: default_vpc})
+            const server_sg = new ec2.SecurityGroup(this, "ServerInstanceSG", { vpc: default_vpc })
             server_sg.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.allTcp(), "Allow TCP from any IPv4")
             server_sg.addIngressRule(ec2.Peer.anyIpv6(), ec2.Port.allTcp(), "Allow TCP from any IPv6")
             server_sg.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), "Allow SSH from any IPv4")
@@ -61,13 +61,14 @@ export class MineStack extends cdk.Stack {
                     ec2.InstanceSize.MEDIUM
                 ),
                 vpc: default_vpc,
-                machineImage: new ec2.AmazonLinuxImage({
-                    cpuType: ec2.AmazonLinuxCpuType.X86_64,
+                // Using free tier ubuntu ami, there doesn't seem to be a cleaner way of doing this, without me writing an ami lookup utility
+                machineImage: ec2.MachineImage.genericLinux({
+                    [process.env.CDK_DEFAULT_REGION!]: "ami-0310483fb2b488153"
                 }),
                 userData: user_data,
                 keyName: keyPair.keyName,
                 userDataCausesReplacement: true,
-                securityGroup:  server_sg
+                securityGroup: server_sg
             })
 
             Tags.of(server_instance).add("STACK", "MineStack")
@@ -78,7 +79,7 @@ export class MineStack extends cdk.Stack {
             process.exit(1)
         }
 
-        const describe_command = new DescribeKeyPairsCommand({KeyNames: [keyPair.keyName]})
+        const describe_command = new DescribeKeyPairsCommand({ KeyNames: [keyPair.keyName] })
         ec2_client.send(describe_command).then(res => {
             const key_id = res.KeyPairs![0].KeyPairId
 
