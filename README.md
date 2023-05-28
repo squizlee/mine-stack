@@ -1,19 +1,19 @@
-# Welcome to your CDK TypeScript project
+# MINE STACK
+🚧 Work in progress
 
-This is a blank project for CDK development with TypeScript.
+Start your own minecraft server on the cloud. 
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+Honestly, I just want to play minecraft with my friends, so why not.
 
-## Useful commands
+## Get started
+1. Create an AWS account
+1. Install `node js`: Follow the instructions here -  https://nodejs.org/en
+1. Install `aws cdk`: `npm i -g aws-cdk`
+1. Install `aws cli`: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+1. Configure your system to use your credentials: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html
+1. Download mine-stack from here
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `cdk deploy`      deploy this stack to your default AWS account/region
-* `cdk diff`        compare deployed stack with current state
-* `cdk synth`       emits the synthesized CloudFormation template
-
-
-## TO RUN STACK
-
+## Running the stack
 1. Create `.env` file with the following values configured: CDK_DEFAULT_REGION, CDK_DEFAULT_ACCOUNT, MINECRAFT_EDITION
+1. `cdk bootstrap` (if you  haven't already for your account)
+1. `cdk deploy`
