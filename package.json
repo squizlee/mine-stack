@@ -22,7 +22,10 @@
     "typescript": "~5.0.4"
   },
   "dependencies": {
+    "@aws-sdk/client-cloudformation": "^3.342.0",
     "aws-cdk-lib": "2.81.0",
+    "chalk": "^4.1.0",
+    "commander": "^10.0.1",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"
   }

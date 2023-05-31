@@ -45,6 +45,8 @@ export class MineStack extends cdk.Stack {
             tags: [{ key: "STACK", value: "MineStack" }],
         })
 
+        let server_instance
+
         if (process.env.MINECRAFT_EDITION === "BEDROCK") {
             const user_data = ec2.UserData.forLinux({
                 shebang: "#!/usr/bin/env bash",
@@ -57,7 +59,7 @@ export class MineStack extends cdk.Stack {
             server_sg.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), "Allow SSH from any IPv4")
             server_sg.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.allUdp(), "Allow UDP traffic from any IPv4")
             server_sg.addIngressRule(ec2.Peer.anyIpv6(), ec2.Port.allUdp(), "Allow UDP traffic from any IPv6")
-            const server_instance = new ec2.Instance(this, "ServerInstance", {
+            server_instance = new ec2.Instance(this, "ServerInstance", {
                 instanceType: ec2.InstanceType.of(
                     ec2.InstanceClass.T2,
                     ec2.InstanceSize.MEDIUM
@@ -70,10 +72,11 @@ export class MineStack extends cdk.Stack {
                 userData: user_data,
                 keyName: keyPair.keyName,
                 userDataCausesReplacement: true,
-                securityGroup: server_sg
+                securityGroup: server_sg,
             })
 
             Tags.of(server_instance).add("STACK", "MineStack")
+
         } else if (process.env.MINCRAFT_EDITION === "JAVA") {
             console.error(
                 "error: currently do not support java edition of the server"
@@ -91,6 +94,9 @@ export class MineStack extends cdk.Stack {
             })
         })
 
-
+        new cdk.CfnOutput(this, "ServerInstanceId", {
+            description: "Server Instance Id",
+            value: server_instance?.instanceId ?? "undefined"
+        })
     }
 }
